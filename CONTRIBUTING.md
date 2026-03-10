@@ -14,7 +14,7 @@ Setup:
 
 ```bash
 git clone <your-repo-url>
-cd playwright-full-tests
+cd playwright-ui-api-framework
 npm ci
 cp .env.example .env
 npx playwright install --with-deps
@@ -159,3 +159,4 @@ Authors are expected to address feedback promptly and keep discussions technical
 - [ ] No hardcoded secrets in code/tests/docs
 - [ ] Documentation updated for behavior changes
 - [ ] PR description includes validation evidence
+

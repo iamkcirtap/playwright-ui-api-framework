@@ -1,8 +1,8 @@
 ﻿# Playwright Automation Framework
 
-[![CI](https://github.com/OWNER/REPO/actions/workflows/playwright.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/playwright.yml)
+[![CI](https://github.com/iamkcirtap/playwright-ui-api-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/iamkcirtap/playwright-ui-api-framework/actions/workflows/playwright.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Issues](https://img.shields.io/github/issues/OWNER/REPO)](https://github.com/OWNER/REPO/issues)
+[![Issues](https://img.shields.io/github/issues/iamkcirtap/playwright-ui-api-framework)](https://github.com/iamkcirtap/playwright-ui-api-framework/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 A scalable Playwright + TypeScript test automation framework for modern ecommerce applications, with support for UI and API testing, reusable fixtures, and CI-ready execution.
@@ -50,7 +50,7 @@ The framework is layered for scale:
 ## Project Folder Structure
 
 ```text
-playwright-full-tests/
+playwright-ui-api-framework/
 ├─ .github/workflows/             # CI pipeline
 ├─ src/
 │  ├─ api/clients/                # BaseAPI + domain clients
@@ -63,7 +63,7 @@ playwright-full-tests/
 ├─ tests/
 │  ├─ ui/                         # UI test suites
 │  ├─ api/                        # API test suites
-│  └─ contract/                   # contract tests
+│  └─ contract/                   # contract test suites
 ├─ playwright.config.ts
 ├─ package.json
 └─ tsconfig.json
@@ -74,7 +74,7 @@ playwright-full-tests/
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/OWNER/REPO.git
+git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
 cd REPO
 npm ci
 cp .env.example .env
@@ -86,13 +86,29 @@ npx playwright show-report
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/OWNER/REPO.git
+git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
 cd REPO
 npm ci
 Copy-Item .env.example .env
 .\node_modules\.bin\playwright.cmd install --with-deps
 .\node_modules\.bin\playwright.cmd test --grep "@smoke"
 .\node_modules\.bin\playwright.cmd show-report
+```
+
+## Git Hygiene
+
+- `.env.example` is committed so everyone has a safe template of required environment variables.
+- `.env` is **not** committed because it contains local secrets (tokens, credentials, internal URLs).
+- Start from the template:
+
+```bash
+cp .env.example .env
+```
+
+(Windows PowerShell)
+
+```powershell
+Copy-Item .env.example .env
 ```
 
 ## Quick Start
@@ -185,3 +201,5 @@ test('User login @smoke', async ({ loginPage, page }) => {
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE).
+
+
