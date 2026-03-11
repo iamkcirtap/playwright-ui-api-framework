@@ -54,6 +54,8 @@ export class CartPage extends BasePage {
   }
 
   async assertEmpty(): Promise<void> {
-    await expect(this.emptyCartMessage.or(this.cartItems)).toBeVisible();
+    await expect(this.emptyCartMessage).toBeVisible();
+    await expect(this.cartItems).toHaveCount(0);
   }
 }
+
