@@ -33,7 +33,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run smoke tests
+      - name: Run SauceDemo smoke tests
         env:
           ENV_FILE: .env
           CI: true
@@ -43,7 +43,7 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
           ENV_NAME: ci
-        run: npx playwright test --project=ui-chromium --grep '@smoke'
+        run: npx playwright test tests/ui/saucedemo-login.spec.ts --project=ui-chromium
 
       - name: Upload Playwright HTML report
         if: always()
@@ -76,7 +76,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run full regression suite
+      - name: Run SauceDemo full UI suite
         env:
           ENV_FILE: .env
           CI: true
@@ -86,7 +86,7 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
           ENV_NAME: nightly
-        run: npx playwright test --project=ui-chromium --grep '@regression|@smoke'
+        run: npx playwright test tests/ui --project=ui-chromium
 
       - name: Upload Playwright HTML report
         if: always()
@@ -96,3 +96,4 @@ jobs:
           path: playwright-report/
           if-no-files-found: warn
           retention-days: 30
+
