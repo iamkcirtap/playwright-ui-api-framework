@@ -1,5 +1,3 @@
-﻿export { HomePage } from '../home/HomePage';
-export { ProductPage } from '../product/ProductPage';
-export { CartPage } from '../cart/CartPage';
-export { CheckoutPage } from '../checkout/CheckoutPage';
+﻿export { BasePage } from './BasePage';
 export { LoginPage } from '../auth/LoginPage';
+export { InventoryPage } from '../inventory/InventoryPage';

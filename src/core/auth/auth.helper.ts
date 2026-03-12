@@ -11,13 +11,13 @@ export class AuthHelper {
     this.loginPage = new LoginPage(page);
   }
 
-  async loginUI(email = env.USER_EMAIL, password = env.USER_PASSWORD): Promise<void> {
-    if (!email || !password) {
+  async loginUI(username = env.USER_EMAIL, password = env.USER_PASSWORD): Promise<void> {
+    if (!username || !password) {
       throw new Error('USER_EMAIL and USER_PASSWORD are required for UI authentication.');
     }
 
     await this.loginPage.goto();
-    await this.loginPage.login(email, password);
+    await this.loginPage.login(username, password);
   }
 
   buildBearerHeader(token = env.API_TOKEN): Record<string, string> {
@@ -33,3 +33,5 @@ export class AuthHelper {
     }, token);
   }
 }
+
+

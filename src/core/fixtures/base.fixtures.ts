@@ -3,11 +3,13 @@ import { BaseAPI } from '../../api/clients/BaseAPI';
 import { env } from '../../config/env';
 import { AuthHelper } from '../auth/auth.helper';
 import { LoginPage } from '../../pages/auth/LoginPage';
+import { InventoryPage } from '../../pages/inventory/InventoryPage';
 
 type FrameworkFixtures = {
   apiContext: APIRequestContext;
   apiClient: BaseAPI;
   loginPage: LoginPage;
+  inventoryPage: InventoryPage;
   authHelper: AuthHelper;
   authenticatedPage: Page;
 };
@@ -32,6 +34,10 @@ export const test = base.extend<FrameworkFixtures>({
 
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
+  },
+
+  inventoryPage: async ({ page }, use) => {
+    await use(new InventoryPage(page));
   },
 
   authHelper: async ({ page }, use) => {
