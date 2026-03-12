@@ -5,27 +5,22 @@
 [![Issues](https://img.shields.io/github/issues/iamkcirtap/playwright-ui-api-framework)](https://github.com/iamkcirtap/playwright-ui-api-framework/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
-A scalable Playwright + TypeScript test automation framework for modern ecommerce applications, with support for UI and API testing, reusable fixtures, and CI-ready execution.
+A scalable Playwright + TypeScript framework with a working SauceDemo UI demo and API test support.
 
-## Problem This Framework Solves
+## Current Scope
 
-Teams often struggle with brittle UI tests, duplicated setup code, and slow feedback loops. This framework solves that by providing:
-
-- a consistent Page Object Model (POM) structure
-- reusable fixtures for setup and shared dependencies
-- environment-based configuration
-- parallelized execution and CI reporting
+- UI demo target: [SauceDemo](https://www.saucedemo.com/)
+- API tests: kept as-is for framework demonstration
+- Pattern: Page Object Model + shared fixtures
 
 ## Key Features
 
-- UI and API testing in one project
+- SauceDemo-ready UI login and inventory tests
+- API testing in the same project
 - Type-safe test code with TypeScript
-- Page Object Model for maintainability
-- reusable fixtures and helpers
-- smoke vs regression tagging strategy
-- parallel test execution
+- Reusable fixtures and helpers
+- Environment-based configuration via `.env.<name>` files
 - HTML reporting with trace/video/screenshot artifacts
-- GitHub Actions pipeline support
 
 ## Technology Stack
 
@@ -36,170 +31,145 @@ Teams often struggle with brittle UI tests, duplicated setup code, and slow feed
 - [zod](https://zod.dev/)
 - [GitHub Actions](https://docs.github.com/actions)
 
-## Architecture Overview
-
-The framework is layered for scale:
-
-- `src/pages`: UI page abstractions using POM
-- `src/api/clients`: API request abstractions
-- `src/core/fixtures`: reusable Playwright fixtures
-- `src/core/utils`: waits, random data, env helpers
-- `src/config`: environment loading and validation
-- `tests`: UI/API/contract test suites
-
-## Project Folder Structure
+## Project Structure
 
 ```text
 playwright-ui-api-framework/
-├─ .github/workflows/             # CI pipeline
+├─ .github/workflows/
+├─ docs/
+│  └─ SAUCEDEMO_TEST_CASES.md
 ├─ src/
-│  ├─ api/clients/                # BaseAPI + domain clients
-│  ├─ config/                     # env loading + validation
+│  ├─ api/clients/               # Base API client
+│  ├─ config/                    # env loading + validation
 │  ├─ core/
-│  │  ├─ auth/                    # auth helpers
-│  │  ├─ fixtures/                # reusable fixtures
-│  │  └─ utils/                   # waits, data, env utilities
-│  └─ pages/                      # page objects by domain
+│  │  ├─ auth/                   # auth helper
+│  │  ├─ fixtures/               # base fixtures (UI + API)
+│  │  └─ utils/
+│  └─ pages/
+│     ├─ auth/                   # SauceDemo login page object
+│     ├─ inventory/              # SauceDemo inventory page object
+│     └─ common/
 ├─ tests/
-│  ├─ ui/                         # UI test suites
-│  ├─ api/                        # API test suites
-│  └─ contract/                   # contract test suites
+│  ├─ ui/                        # SauceDemo UI specs
+│  └─ api/                       # API specs
 ├─ playwright.config.ts
 ├─ package.json
 └─ tsconfig.json
 ```
 
-## First 10 Minutes
+## Quick Start
 
 ### macOS / Linux
 
 ```bash
 git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
-cd REPO
+cd playwright-ui-api-framework
 npm ci
-cp .env.example .env
+cp .env.example .env.sauce
 npx playwright install --with-deps
-npx playwright test --grep "@smoke"
-npx playwright show-report
+npm run test:sauce
 ```
 
 ### Windows PowerShell
 
 ```powershell
 git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
-cd REPO
+cd playwright-ui-api-framework
 npm ci
-Copy-Item .env.example .env
+Copy-Item .env.example .env.sauce
 .\node_modules\.bin\playwright.cmd install --with-deps
-.\node_modules\.bin\playwright.cmd test --grep "@smoke"
-.\node_modules\.bin\playwright.cmd show-report
+npm.cmd run test:sauce
 ```
 
-## Git Hygiene
+## Environment Files
 
-- `.env.example` is committed so everyone has a safe template of required environment variables.
-- `.env` is **not** committed because it contains local secrets (tokens, credentials, internal URLs).
-- Start from the template:
+- `.env` for default local runs
+- `.env.sauce` for SauceDemo runs
+- select env by setting `ENV_NAME`, example: `ENV_NAME=sauce`
 
-```bash
-cp .env.example .env
+Sample SauceDemo env:
+
+```env
+ENV_NAME=sauce
+UI_BASE_URL=https://www.saucedemo.com/
+USER_EMAIL=standard_user
+USER_PASSWORD=secret_sauce
+HEADLESS=true
 ```
-
-(Windows PowerShell)
-
-```powershell
-Copy-Item .env.example .env
-```
-
-## Quick Start
-
-```bash
-npm ci
-cp .env.example .env
-npx playwright install --with-deps
-npm test
-```
-
-## Installation
-
-1. Clone the repo.
-2. Install dependencies with `npm ci`.
-3. Create env file: `cp .env.example .env`.
-4. Update `.env` values.
-5. Install Playwright browsers.
 
 ## Run Tests
 
-Run all tests:
+Run all tests with current/default env:
 
 ```bash
 npm test
 ```
 
-Run smoke tests:
+Run SauceDemo UI + API using Sauce env:
 
 ```bash
-npx playwright test --grep "@smoke"
+npm run test:sauce
 ```
 
-Run tests in parallel (custom workers):
+Run only SauceDemo UI tests:
 
 ```bash
-npx playwright test --workers=4
+npm run test:sauce -- --project=ui-chromium
 ```
 
-Run a specific suite:
+Run API tests only:
 
 ```bash
-npx playwright test tests/ui/ecommerce.spec.ts
+npm run test:api
 ```
 
-Windows PowerShell fallback if `npx` is blocked:
+Run a specific SauceDemo test file:
+
+```bash
+npm run test:sauce -- tests/ui/saucedemo-login.spec.ts --project=ui-chromium
+```
+
+Windows fallback if `npx` is blocked:
 
 ```powershell
 .\node_modules\.bin\playwright.cmd test
 ```
 
-## Generate and View Reports
+## Reports and Artifacts
 
-After a run, open the HTML report:
+Open Playwright report:
 
 ```bash
 npx playwright show-report
 ```
 
-Artifacts on failure (configured in Playwright):
+Artifacts on failure:
 
 - trace
 - screenshot
 - video
 
-## Example Test
+## Example Test (Current Fixtures)
 
 ```ts
-import { test, expect } from '../../src/core/fixtures/ui.fixtures';
+import { test, expect } from '../../src/core/fixtures/base.fixtures';
+import { env } from '../../src/config/env';
 
-test('User login @smoke', async ({ loginPage, page }) => {
+test('SauceDemo login happy path', async ({ loginPage, page }) => {
   await loginPage.goto();
-  await loginPage.login('qa@example.com', 'Password123!');
-  await expect(page).not.toHaveURL(/\/login/i);
+  await loginPage.login(env.USER_EMAIL!, env.USER_PASSWORD!);
+
+  await expect(page).toHaveURL(/inventory\.html/);
+  await expect(page.locator('.title')).toHaveText('Products');
 });
 ```
 
-## Screenshots / Report Examples
+## Test Cases Document
 
-![Playwright HTML Report](./docs/assets/playwright-report-example.png)
+Detailed manual/automation-ready test cases are maintained in:
 
-## Roadmap
-
-- [ ] Add domain-specific API clients beyond `BaseAPI`
-- [ ] Add contract/schema validation suite
-- [ ] Add sharded CI execution for large regression packs
-- [ ] Add authenticated `storageState` setup project
-- [ ] Add visual regression checks for critical pages
+- [docs/SAUCEDEMO_TEST_CASES.md](./docs/SAUCEDEMO_TEST_CASES.md)
 
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE).
-
-

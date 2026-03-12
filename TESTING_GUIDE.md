@@ -6,53 +6,40 @@ This framework prioritizes confidence, speed, and maintainability.
 
 Principles:
 
-- validate user and API behavior, not implementation details
+- validate UI/API behavior, not implementation details
 - keep tests deterministic and isolated
-- reuse framework components instead of duplicating logic
+- reuse page objects and fixtures
 - fail with actionable diagnostics
 
-## Test Pyramid Strategy
+## Current Strategy
 
-Use a balanced pyramid:
-
-1. API tests (broad, fast coverage)
-2. UI tests (critical user workflows)
-3. Contract tests (schema and compatibility checks)
-
-Prefer more API coverage where possible, and reserve UI tests for business-critical journeys.
+1. SauceDemo UI coverage for working demo flows
+2. API coverage retained as-is
 
 ## Framework Architecture
 
-Core layers:
-
-- `src/pages`: POM classes with locators/actions/assertions
-- `src/api/clients`: API abstraction layer
-- `src/core/fixtures`: shared setup and dependency injection
-- `src/core/utils`: common utilities (waits, data, env)
+- `src/pages`: page objects (`LoginPage`, `InventoryPage`)
+- `src/api/clients`: API abstraction layer (`BaseAPI`)
+- `src/core/fixtures`: shared fixtures (`base.fixtures.ts`)
+- `src/core/utils`: common utilities
 - `src/config`: environment parsing and validation
-- `tests`: domain test suites
-
-## Page Object Model Usage
-
-Each page object should contain:
-
-- stable locators
-- business actions
-- assertion methods
-
-Keep raw selector logic out of spec files.
+- `tests/ui`: SauceDemo specs
+- `tests/api`: API specs
 
 ## Writing UI Tests
 
-Use UI fixtures and keep tests concise.
+Use `base.fixtures` and keep tests concise.
 
 ```ts
-import { test, expect } from '../../src/core/fixtures/ui.fixtures';
+import { test, expect } from '../../src/core/fixtures/base.fixtures';
+import { env } from '../../src/config/env';
 
-test('Product search @smoke @ui', async ({ homePage }) => {
-  await homePage.goto();
-  await homePage.searchProduct('shoe');
-  await homePage.assertSearchResultsContain('shoe');
+test('SauceDemo inventory loads after login', async ({ loginPage, inventoryPage, page }) => {
+  await loginPage.goto();
+  await loginPage.login(env.USER_EMAIL!, env.USER_PASSWORD!);
+
+  await inventoryPage.assertLoaded();
+  await expect(page).toHaveURL(/inventory\.html/);
 });
 ```
 
@@ -63,55 +50,34 @@ Use API fixtures and verify status + payload behavior.
 ```ts
 import { test, expect } from '../../src/core/fixtures/base.fixtures';
 
-test('Orders endpoint @regression @api', async ({ apiContext }) => {
+test('Orders endpoint', async ({ apiContext }) => {
   const response = await apiContext.get('/orders');
   expect(response.status()).toBe(200);
-  expect(Array.isArray(await response.json())).toBeTruthy();
 });
 ```
 
 ## Fixtures and Reusable Components
 
-Use fixtures to share setup and minimize duplication:
+`base.fixtures.ts` provides:
 
-- `base.fixtures.ts`: API context/client, auth helpers, base setup
-- `ui.fixtures.ts`: page objects for UI tests
+- `apiContext`
+- `apiClient`
+- `loginPage`
+- `inventoryPage`
+- `authHelper`
+- `authenticatedPage`
 
-If you need new shared setup, extend fixtures instead of copy/pasting setup in tests.
+Add shared setup in `base.fixtures.ts` instead of duplicating test setup.
 
-## Test Data Management
+## Environment and Execution
 
-- keep test data deterministic where possible
-- generate unique data for parallel-safe scenarios
-- avoid dependency on shared mutable records
-- keep secrets in env variables, never in code
-
-## Tagging Strategy
-
-Use tags in test names:
-
-- `@smoke`: critical checks run on pull requests
-- `@regression`: broader suite for nightly/full runs
-- optional: `@ui`, `@api`, `@contract`
-
-Policy:
-
-- every new/updated test must include `@smoke` or `@regression`
-- reviewers enforce this during PR review
-- missing lifecycle tags are a merge blocker
-
-Examples:
-
-```ts
-test('Checkout flow @regression @ui', async () => {});
-test('Create order API @smoke @api', async () => {});
-```
+- env file selection uses `ENV_NAME` (loads `.env.<ENV_NAME>`)
+- SauceDemo run command: `npm run test:sauce`
+- API-only run command: `npm run test:api`
 
 ## Parallel Test Execution
 
 Parallel runs are enabled in Playwright config.
-
-Run with custom workers:
 
 ```bash
 npx playwright test --workers=4
@@ -119,52 +85,32 @@ npx playwright test --workers=4
 
 Guidelines:
 
-- avoid shared account/cart state across tests
-- create/clean test data per test where feasible
-- do not rely on test execution order
+- avoid shared mutable state across tests
+- keep each test independent
+- avoid order dependencies
 
 ## Debugging Failing Tests
 
-Debug mode:
-
 ```bash
 npx playwright test --debug
-```
-
-Headed mode:
-
-```bash
 npx playwright test --headed
-```
-
-Open report:
-
-```bash
 npx playwright show-report
-```
-
-Open trace:
-
-```bash
 npx playwright show-trace <path-to-trace.zip>
 ```
 
 ## Handling Flaky Tests
 
-When a test is flaky:
-
 1. reproduce locally with retries disabled
 2. inspect trace/video/screenshot
 3. verify selector stability
 4. replace hard waits with state-based waits
-5. isolate data and remove cross-test coupling
-6. only then consider retries as mitigation
+5. isolate data and cross-test coupling
+6. only then consider retries
 
 ## Best Practices
 
 - keep assertions outcome-focused
-- keep page objects small and domain-focused
-- prefer explicit expectations over implicit waits
-- use fixtures for setup reuse
-- keep tests independent, idempotent, and parallel-safe
+- keep page objects domain-focused
+- use stable selectors
+- keep tests independent and parallel-safe
 - update docs when framework behavior changes
