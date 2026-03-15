@@ -6,13 +6,21 @@ const selectedEnvFile = process.env.ENV_FILE || (selectedEnvName ? `.env.${selec
 
 dotenv.config({ path: selectedEnvFile });
 
+const optionalNonEmptyString = z.preprocess(
+  value => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+  z.string().min(1).optional()
+);
+
 const envSchema = z.object({
   ENV_NAME: z.string().default('local'),
   UI_BASE_URL: z.string().url(),
-  API_BASE_URL: z.string().url().optional(),
-  API_TOKEN: z.string().min(1).optional(),
-  USER_EMAIL: z.string().min(1).optional(),
-  USER_PASSWORD: z.string().min(1).optional(),
+  API_BASE_URL: z.preprocess(
+    value => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+    z.string().url().optional()
+  ),
+  API_TOKEN: optionalNonEmptyString,
+  USER_EMAIL: optionalNonEmptyString,
+  USER_PASSWORD: optionalNonEmptyString,
   HEADLESS: z.enum(['true', 'false']).default('true')
 });
 

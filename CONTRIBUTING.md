@@ -16,11 +16,11 @@ Setup:
 git clone <your-repo-url>
 cd playwright-ui-api-framework
 npm ci
-cp .env.example .env.sauce
+cp .env.example .env
 npx playwright install --with-deps
 ```
 
-Update `.env.sauce` values before running SauceDemo tests.
+The tracked `.env.example` is runnable for the SauceDemo UI suite. Copy it to `.env` and adjust values only if you need a different target.
 
 ## Running Tests Locally
 
