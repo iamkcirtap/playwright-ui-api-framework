@@ -33,16 +33,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Prepare environment file
+        run: cp .env.example .env
+
       - name: Run SauceDemo smoke tests
         env:
-          ENV_FILE: .env
           CI: true
-          UI_BASE_URL: ${{ secrets.UI_BASE_URL }}
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          USER_EMAIL: ${{ secrets.USER_EMAIL }}
-          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-          ENV_NAME: ci
         run: npx playwright test tests/ui/saucedemo-login.spec.ts --project=ui-chromium
 
       - name: Upload Playwright HTML report
@@ -76,16 +72,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Prepare environment file
+        run: cp .env.example .env
+
       - name: Run SauceDemo full UI suite
         env:
-          ENV_FILE: .env
           CI: true
-          UI_BASE_URL: ${{ secrets.UI_BASE_URL }}
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          USER_EMAIL: ${{ secrets.USER_EMAIL }}
-          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-          ENV_NAME: nightly
         run: npx playwright test tests/ui --project=ui-chromium
 
       - name: Upload Playwright HTML report

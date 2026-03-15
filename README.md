@@ -65,9 +65,9 @@ playwright-ui-api-framework/
 git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
 cd playwright-ui-api-framework
 npm ci
-cp .env.example .env.sauce
+cp .env.example .env
 npx playwright install --with-deps
-npm run test:sauce
+npm test -- --project=ui-chromium
 ```
 
 ### Windows PowerShell
@@ -76,22 +76,24 @@ npm run test:sauce
 git clone https://github.com/iamkcirtap/playwright-ui-api-framework.git
 cd playwright-ui-api-framework
 npm ci
-Copy-Item .env.example .env.sauce
+Copy-Item .env.example .env
 .\node_modules\.bin\playwright.cmd install --with-deps
-npm.cmd run test:sauce
+npm.cmd test -- --project=ui-chromium
 ```
 
 ## Environment Files
 
 - `.env` for default local runs
-- `.env.sauce` for SauceDemo runs
-- select env by setting `ENV_NAME`, example: `ENV_NAME=sauce`
+- `.env.example` as the tracked demo template
+- select env by setting `ENV_NAME` when you create additional local-only env files
 
-Sample SauceDemo env:
+Sample default demo env:
 
 ```env
-ENV_NAME=sauce
+ENV_NAME=local
 UI_BASE_URL=https://www.saucedemo.com/
+API_BASE_URL=
+API_TOKEN=
 USER_EMAIL=standard_user
 USER_PASSWORD=secret_sauce
 HEADLESS=true
