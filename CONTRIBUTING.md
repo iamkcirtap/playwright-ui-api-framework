@@ -1,16 +1,16 @@
-﻿# Contributing
+# Contributing
 
-Thanks for contributing. This guide helps you set up locally, follow project conventions, and submit high-quality pull requests.
+Thanks for contributing. This project is meant to stay approachable, so this guide is here to help you get set up quickly and keep changes clean, testable, and easy to review.
 
 ## Development Environment Setup
 
-Prerequisites:
+You will need:
 
 - Node.js 20+
 - npm 10+
 - Git
 
-Setup:
+Setup steps:
 
 ```bash
 git clone <your-repo-url>
@@ -20,41 +20,41 @@ cp .env.example .env
 npx playwright install --with-deps
 ```
 
-The tracked `.env.example` is runnable for the SauceDemo UI suite. Copy it to `.env` and adjust values only if you need a different target.
+The tracked `.env.example` already works for the SauceDemo UI suite. In most cases, copying it to `.env` is enough to get started.
 
 ## Running Tests Locally
 
-All tests (default env):
+Run the full suite with the default env:
 
 ```bash
 npm test
 ```
 
-SauceDemo-focused run:
+Run the SauceDemo-focused suite:
 
 ```bash
 npm run test:sauce
 ```
 
-UI only:
+Run UI only:
 
 ```bash
 npm run test:sauce -- --project=ui-chromium
 ```
 
-API only:
+Run API only:
 
 ```bash
 npm run test:api
 ```
 
-Single SauceDemo spec:
+Run a single SauceDemo spec:
 
 ```bash
 npm run test:sauce -- tests/ui/saucedemo-login.spec.ts --project=ui-chromium
 ```
 
-Type-check:
+Run type-checking:
 
 ```bash
 npx tsc --noEmit
@@ -69,11 +69,11 @@ Use short-lived branches from `main`:
 - `test/<short-name>`
 - `docs/<short-name>`
 
-Keep PRs focused on one concern.
+Try to keep each PR focused on one concern. Small PRs are faster to review and easier to trust.
 
 ## Commit Message Guidelines
 
-Prefer Conventional Commits:
+Conventional Commits are preferred:
 
 - `feat: add inventory sort coverage`
 - `fix: stabilize saucedemo login assertion`
@@ -85,13 +85,13 @@ Prefer Conventional Commits:
 - Use TypeScript strict typing.
 - Keep selectors in page objects.
 - Prefer stable selectors.
-- Keep tests behavior-oriented and readable.
+- Keep tests behavior-oriented and easy to read.
 - Avoid duplicated setup; use fixtures/helpers.
 - Use deterministic assertions.
 
 ## How to Create New Page Objects
 
-1. Create file under `src/pages/<domain>/`.
+1. Create the file under `src/pages/<domain>/`.
 2. Extend `BasePage`.
 3. Add locators, business actions, and assertions.
 4. Keep methods reusable and domain-focused.
@@ -102,31 +102,31 @@ Prefer Conventional Commits:
 - `tests/ui`
 - `tests/api`
 
-2. Import fixture:
+2. Import the shared fixture:
 - `src/core/fixtures/base.fixtures`
 
 3. Validate locally before opening a PR.
 
 ## Pull Request Process
 
-Before opening PR:
+Before opening a PR:
 
-- run tests relevant to your change
+- run the tests relevant to your change
 - run type-check
 - update docs when behavior changes
 
-PR should include:
+Your PR should include:
 
 - problem statement
 - solution summary
-- risk/impact
-- validation evidence (test output/report screenshots)
+- risk or impact
+- validation evidence such as test output or report screenshots
 
 Use the PR template at `.github/pull_request_template.md`.
 
 ## Code Review Expectations
 
-Reviewers focus on:
+Reviewers usually focus on:
 
 - correctness and reliability
 - architectural consistency (POM + fixtures)
@@ -138,6 +138,6 @@ Reviewers focus on:
 
 - [ ] Code compiles (`npx tsc --noEmit`)
 - [ ] Relevant tests pass locally
-- [ ] No hardcoded secrets in code/tests/docs
-- [ ] Documentation updated for behavior changes
+- [ ] No hardcoded secrets in code, tests, or docs
+- [ ] Documentation is updated for behavior changes
 - [ ] PR description includes validation evidence
