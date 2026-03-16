@@ -1,20 +1,20 @@
-﻿# Testing Guide
+# Testing Guide
 
 ## Testing Philosophy
 
-This framework prioritizes confidence, speed, and maintainability.
+This framework is built around a pretty standard QA goal: catch real issues without turning the test suite into something hard to trust or maintain.
 
-Principles:
+Core ideas:
 
-- validate UI/API behavior, not implementation details
+- verify behavior, not internal implementation details
 - keep tests deterministic and isolated
-- reuse page objects and fixtures
-- fail with actionable diagnostics
+- reuse page objects and fixtures instead of repeating setup
+- fail with enough diagnostics that debugging is straightforward
 
 ## Current Strategy
 
-1. SauceDemo UI coverage for working demo flows
-2. API coverage retained as-is
+1. Cover the main SauceDemo UI flows for the working demo
+2. Keep API coverage in the project so the framework shows both UI and API testing patterns
 
 ## Framework Architecture
 
@@ -28,7 +28,7 @@ Principles:
 
 ## Writing UI Tests
 
-Use `base.fixtures` and keep tests concise.
+Use `base.fixtures` and keep the spec focused on the user flow. If setup, selectors, or repeated actions start taking over the test, that logic probably belongs in a page object or fixture.
 
 ```ts
 import { test, expect } from '../../src/core/fixtures/base.fixtures';
@@ -45,7 +45,7 @@ test('SauceDemo inventory loads after login', async ({ loginPage, inventoryPage,
 
 ## Writing API Tests
 
-Use API fixtures and verify status + payload behavior.
+Use the shared API fixtures and assert the behavior that actually matters: status codes, payload shape, and meaningful response data.
 
 ```ts
 import { test, expect } from '../../src/core/fixtures/base.fixtures';
@@ -67,29 +67,31 @@ test('Orders endpoint', async ({ apiContext }) => {
 - `authHelper`
 - `authenticatedPage`
 
-Add shared setup in `base.fixtures.ts` instead of duplicating test setup.
+If multiple tests need the same setup, add it once in `base.fixtures.ts` instead of copying it into every spec.
 
 ## Environment and Execution
 
-- env file selection uses `ENV_NAME` (loads `.env.<ENV_NAME>`)
-- SauceDemo run command: `npm run test:sauce`
-- API-only run command: `npm run test:api`
+- env file selection uses `ENV_NAME`, which loads `.env.<ENV_NAME>`
+- SauceDemo command: `npm run test:sauce`
+- API-only command: `npm run test:api`
 
 ## Parallel Test Execution
 
-Parallel runs are enabled in Playwright config.
+Parallel execution is enabled in Playwright config, so tests need to behave well when they run beside each other.
 
 ```bash
 npx playwright test --workers=4
 ```
 
-Guidelines:
+Keep these rules in mind:
 
 - avoid shared mutable state across tests
 - keep each test independent
-- avoid order dependencies
+- do not rely on execution order
 
 ## Debugging Failing Tests
+
+When something fails, start with the trace before changing the test. It usually tells you whether the issue is bad data, a timing problem, or a broken selector.
 
 ```bash
 npx playwright test --debug
@@ -101,16 +103,16 @@ npx playwright show-trace <path-to-trace.zip>
 ## Handling Flaky Tests
 
 1. reproduce locally with retries disabled
-2. inspect trace/video/screenshot
+2. inspect trace, video, and screenshot artifacts
 3. verify selector stability
 4. replace hard waits with state-based waits
-5. isolate data and cross-test coupling
+5. isolate data issues and cross-test coupling
 6. only then consider retries
 
 ## Best Practices
 
-- keep assertions outcome-focused
-- keep page objects domain-focused
-- use stable selectors
+- keep assertions focused on outcomes the user would notice
+- keep page objects focused on business actions, not one-off script steps
+- prefer stable selectors
 - keep tests independent and parallel-safe
-- update docs when framework behavior changes
+- update the docs when the framework behavior changes

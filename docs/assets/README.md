@@ -1,2 +1,3 @@
-﻿# Add a real screenshot later
-Place a PNG file named `playwright-report-example.png` in this folder to render the README image block.
+# Screenshot Placeholder
+
+Drop a PNG named `playwright-report-example.png` into this folder when you have a real report screenshot ready for the README.

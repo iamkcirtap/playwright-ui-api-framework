@@ -1,28 +1,28 @@
-﻿# Playwright Automation Framework
+# Playwright Automation Framework
 
 [![CI](https://github.com/iamkcirtap/playwright-ui-api-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/iamkcirtap/playwright-ui-api-framework/actions/workflows/playwright.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Issues](https://img.shields.io/github/issues/iamkcirtap/playwright-ui-api-framework)](https://github.com/iamkcirtap/playwright-ui-api-framework/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
-A scalable Playwright + TypeScript framework with a working SauceDemo UI demo and API test support.
+This is a practical Playwright + TypeScript test framework with a working SauceDemo UI example and API test support. The main idea is to keep tests readable, reusable, and easy to troubleshoot when something fails.
 
-## Current Scope
+## What This Repo Covers
 
 - UI demo target: [SauceDemo](https://www.saucedemo.com/)
-- API tests: kept as-is for framework demonstration
+- API tests: included to show how UI and API coverage can live in one project
 - Pattern: Page Object Model + shared fixtures
 
-## Key Features
+## Why You Might Use It
 
-- SauceDemo-ready UI login and inventory tests
-- API testing in the same project
+- SauceDemo-ready UI login and inventory coverage
+- API tests in the same project
 - Type-safe test code with TypeScript
-- Reusable fixtures and helpers
+- Reusable fixtures and helpers so setup does not get copied everywhere
 - Environment-based configuration via `.env.<name>` files
-- HTML reporting with trace/video/screenshot artifacts
+- HTML reporting with trace, video, and screenshot artifacts when a test fails
 
-## Technology Stack
+## Stack
 
 - [Playwright](https://playwright.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
@@ -59,6 +59,8 @@ playwright-ui-api-framework/
 
 ## Quick Start
 
+If you just want to get the demo running, this is the shortest path.
+
 ### macOS / Linux
 
 ```bash
@@ -83,11 +85,11 @@ npm.cmd test -- --project=ui-chromium
 
 ## Environment Files
 
-- `.env` for default local runs
-- `.env.example` as the tracked demo template
-- select env by setting `ENV_NAME` when you create additional local-only env files
+- `.env` is your default local file
+- `.env.example` is the tracked demo template
+- set `ENV_NAME` if you want to load something like `.env.staging` or another local variant
 
-Sample default demo env:
+Example local demo config:
 
 ```env
 ENV_NAME=local
@@ -99,21 +101,21 @@ USER_PASSWORD=secret_sauce
 HEADLESS=true
 ```
 
-## Run Tests
+## Running Tests
 
-Run all tests with current/default env:
+Run everything with the current or default env:
 
 ```bash
 npm test
 ```
 
-Run SauceDemo UI + API using Sauce env:
+Run the SauceDemo-focused set:
 
 ```bash
 npm run test:sauce
 ```
 
-Run only SauceDemo UI tests:
+Run only the SauceDemo UI tests:
 
 ```bash
 npm run test:sauce -- --project=ui-chromium
@@ -125,13 +127,13 @@ Run API tests only:
 npm run test:api
 ```
 
-Run a specific SauceDemo test file:
+Run one specific SauceDemo spec:
 
 ```bash
 npm run test:sauce -- tests/ui/saucedemo-login.spec.ts --project=ui-chromium
 ```
 
-Windows fallback if `npx` is blocked:
+If `npx` is blocked on Windows:
 
 ```powershell
 .\node_modules\.bin\playwright.cmd test
@@ -139,19 +141,19 @@ Windows fallback if `npx` is blocked:
 
 ## Reports and Artifacts
 
-Open Playwright report:
+Open the Playwright HTML report:
 
 ```bash
 npx playwright show-report
 ```
 
-Artifacts on failure:
+When a test fails, Playwright can keep:
 
 - trace
 - screenshot
 - video
 
-## Example Test (Current Fixtures)
+## Example Test
 
 ```ts
 import { test, expect } from '../../src/core/fixtures/base.fixtures';
@@ -166,9 +168,9 @@ test('SauceDemo login happy path', async ({ loginPage, page }) => {
 });
 ```
 
-## Test Cases Document
+## Test Cases
 
-Detailed manual/automation-ready test cases are maintained in:
+If you want the manual or automation-ready SauceDemo scenarios, they live here:
 
 - [docs/SAUCEDEMO_TEST_CASES.md](./docs/SAUCEDEMO_TEST_CASES.md)
 
